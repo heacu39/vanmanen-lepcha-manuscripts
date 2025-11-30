@@ -6,7 +6,7 @@
 
     <xsl:output method="xml" indent="yes"/>
 
-    <xsl:param name="ids" select="'L001, L003, L036, L047, L048, L072, L147, L152'"/>
+    <xsl:param name="ids" select="'L001, L003, L013, L036, L047, L048, L072, L147, L152'"/>
 
     <xsl:template match="/">
         <collection>

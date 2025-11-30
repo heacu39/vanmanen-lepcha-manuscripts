@@ -58,7 +58,9 @@
                         <json:string key="page">
                             <xsl:for-each select="//TextLine">
                                 <xsl:value-of select="./TextEquiv/Unicode"/>
-                                <xsl:text> &lt;BR&gt; </xsl:text>
+                                <xsl:text> [</xsl:text> 
+                                <xsl:value-of select="position()"/>
+                                <xsl:text>] </xsl:text>
                             </xsl:for-each>
                         </json:string>
                         <json:array key="annotations">
@@ -136,7 +138,7 @@
                         <json:map key="body">
                             <json:string key="value">
                                 <xsl:value-of
-                                    select="string-join($word[position() &gt;= $offset and position() &lt; $offset + $length]/TextEquiv/Unicode, '')"
+                                    select="string-join($word[position() &gt;= $offset and position() &lt; $offset + $length]/TextEquiv/Unicode, ' ')"
                                 />
                             </json:string>
                             <json:string key="type">TextualBody</json:string>

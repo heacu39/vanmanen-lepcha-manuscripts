@@ -79,7 +79,8 @@
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates select="TextEquiv"/>
-        </TextLine>s </xsl:template>
+        </TextLine>
+    </xsl:template>
 
     <xsl:template name="getLeftX">
         <xsl:param name="points"/>
