@@ -19,14 +19,15 @@
             <xsl:value-of select="substring-before(substring-after(json:map/json:string[@key='@id'], 'item:'), '/')"/>
         </xsl:variable>
         
-        <xsl:variable name="file">
-            <xsl:text>iiif-manifests/m</xsl:text>
+        <xsl:variable name="cs2">
+            <xsl:text>iiif-manifests/cs2/m</xsl:text>
             <xsl:value-of select="$id"/>
         </xsl:variable>
-
-        <xsl:result-document href="{$file}" method="text">
+        
+        <xsl:result-document href="{$cs2}" method="text">
             <xsl:value-of select="xml-to-json($xml, map {'indent': true(), 'escaped': false() })"/>
         </xsl:result-document>
+        
     </xsl:template>
     
     <xsl:template match="@* | node()">
@@ -37,7 +38,7 @@
     
     <xsl:template match="json:string[@key='@id'][following-sibling::json:string[@key='@type']]">
         <json:string key="@id">
-            <xsl:text>https://raw.githubusercontent.com/heacu39/vanmanen-lepcha-manuscripts/refs/heads/main/iiif-manifests/m</xsl:text>
+            <xsl:text>https://raw.githubusercontent.com/heacu39/vanmanen-lepcha-manuscripts/refs/heads/main/iiif-manifests/cs2/m</xsl:text>
             <xsl:value-of select="substring-before(substring-after(., 'item:'), '/')"/>
         </json:string>
     </xsl:template>
