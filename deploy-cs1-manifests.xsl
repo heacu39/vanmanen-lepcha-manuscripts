@@ -19,12 +19,12 @@
             <xsl:value-of select="substring-before(substring-after(json:map/json:string[@key='@id'], 'item:'), '/')"/>
         </xsl:variable>
         
-        <xsl:variable name="cs1">
+        <xsl:variable name="file">
             <xsl:text>iiif-manifests/cs1/m</xsl:text>
             <xsl:value-of select="$id"/>
         </xsl:variable>
 
-        <xsl:result-document href="{$cs1}" method="text">
+        <xsl:result-document href="{$file}" method="text">
             <xsl:value-of select="xml-to-json($xml, map {'indent': true(), 'escaped': false() })"/>
         </xsl:result-document>
         
@@ -57,6 +57,3 @@
     </xsl:template>
     
 </xsl:stylesheet>
-
-
-

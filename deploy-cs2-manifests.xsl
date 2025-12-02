@@ -19,12 +19,12 @@
             <xsl:value-of select="substring-before(substring-after(json:map/json:string[@key='@id'], 'item:'), '/')"/>
         </xsl:variable>
         
-        <xsl:variable name="cs2">
+        <xsl:variable name="file">
             <xsl:text>iiif-manifests/cs2/m</xsl:text>
             <xsl:value-of select="$id"/>
         </xsl:variable>
         
-        <xsl:result-document href="{$cs2}" method="text">
+        <xsl:result-document href="{$file}" method="text">
             <xsl:value-of select="xml-to-json($xml, map {'indent': true(), 'escaped': false() })"/>
         </xsl:result-document>
         
@@ -36,13 +36,23 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="json:string[@key='@id'][following-sibling::json:string[@key='@type']]">
+    <xsl:template match="json:string[@key='@id'][following-sibling::json:string[@key='@type'] = 'sc:Manifest']">
+        <xsl:variable name="id">
+            <xsl:value-of select="substring-before(substring-after(., 'item:'), '/')"/>
+        </xsl:variable>
+        
+        <json:map key="service">
+            <json:string key="id">
+                <xsl:text>https://fleiden-u6old.ondigitalocean.app/cs2/search/m</xsl:text>
+                <xsl:value-of select="$id"/>
+            </json:string>
+            <json:string key="type">SearchService2</json:string>
+        </json:map>
+
         <json:string key="@id">
             <xsl:text>https://raw.githubusercontent.com/heacu39/vanmanen-lepcha-manuscripts/refs/heads/main/iiif-manifests/cs2/m</xsl:text>
-            <xsl:value-of select="substring-before(substring-after(., 'item:'), '/')"/>
+            <xsl:value-of select="$id"/>
         </json:string>
     </xsl:template>
+    
 </xsl:stylesheet>
-
-
-
