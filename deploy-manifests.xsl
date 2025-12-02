@@ -6,24 +6,42 @@
     exclude-result-prefixes="xs math"
     version="3.0">
     
-    <xsl:output method="text" indent="yes"/>
-    
     <xsl:template match="/">
         <xsl:apply-templates select="collection/manuscript"/>
     </xsl:template>
     
     <xsl:template match="manuscript">
         <xsl:variable name="xml" as="element(json:map)">
-            <xsl:copy-of select="json:map"/>
+            <xsl:apply-templates select="json:map"/>
+        </xsl:variable>
+        
+        <xsl:variable name="id">
+            <xsl:value-of select="substring-before(substring-after(json:map/json:string[@key='@id'], 'item:'), '/')"/>
         </xsl:variable>
         
         <xsl:variable name="file">
             <xsl:text>iiif-manifests/m</xsl:text>
-            <xsl:value-of select="substring-before(substring-after(json:map/json:string[@key='@id'], 'item:'), '/')"/>
+            <xsl:value-of select="$id"/>
         </xsl:variable>
 
-        <xsl:result-document href="{$file}" method="text" indent="true">
-            <xsl:value-of select="xml-to-json($xml)"/>
+        <xsl:result-document href="{$file}" method="text">
+            <xsl:value-of select="xml-to-json($xml, map {'indent': true(), 'escaped': false() })"/>
         </xsl:result-document>
     </xsl:template>
+    
+    <xsl:template match="@* | node()">
+        <xsl:copy>
+            <xsl:apply-templates select="@* | node()"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="json:string[@key='@id'][following-sibling::json:string[@key='@type']]">
+        <json:string key="@id">
+            <xsl:text>https://raw.githubusercontent.com/heacu39/vanmanen-lepcha-manuscripts/refs/heads/main/iiif-manifests/m</xsl:text>
+            <xsl:value-of select="substring-before(substring-after(., 'item:'), '/')"/>
+        </json:string>
+    </xsl:template>
 </xsl:stylesheet>
+
+
+
