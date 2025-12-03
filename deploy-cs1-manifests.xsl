@@ -57,39 +57,62 @@
     </xsl:template>
 
     <xsl:template match="manuscript">
-        <xsl:variable name="xml" as="element(json:map)">
-            <xsl:apply-templates select="json:map"/>
-        </xsl:variable>
-
-        <xsl:variable name="id">
-            <xsl:value-of
-                select="substring-before(substring-after(json:map/json:string[@key = '@id'], 'item:'), '/')"
-            />
-        </xsl:variable>
-
-        <xsl:variable name="file">
-            <xsl:text>iiif-manifests/cs1/m</xsl:text>
-            <xsl:value-of select="$id"/>
-        </xsl:variable>
-
-        <xsl:result-document href="{$file}" method="text">
-            <xsl:value-of select="
-                    xml-to-json($xml, map {
-                        'indent': true(),
-                        'escaped': false()
-                    })"/>
-        </xsl:result-document>
-
+        <xsl:call-template name="writemanifest">
+            <xsl:with-param name="ms" select="."/>
+            <xsl:with-param name="mode" select="'word'"/>
+        </xsl:call-template>
+        <xsl:call-template name="writemanifest">
+            <xsl:with-param name="ms" select="."/>
+            <xsl:with-param name="mode" select="'line'"/>
+        </xsl:call-template>
     </xsl:template>
 
+    <xsl:template name="writemanifest">
+        <xsl:param name="ms"/>
+        <xsl:param name="mode"/>
+        
+        <xsl:variable name="id">
+            <xsl:value-of
+                select="substring-before(substring-after($ms/json:map/json:string[@key = '@id'], 'item:'), '/')"
+            />
+        </xsl:variable>
+        
+        <xsl:variable name="xml" as="element(json:map)">
+            <xsl:apply-templates select="$ms/json:map">
+                <xsl:with-param name="mode" select="$mode"/>
+            </xsl:apply-templates>
+        </xsl:variable>
+        
+        <xsl:variable name="file">
+            <xsl:text>iiif-manifests/cs1</xsl:text>
+            <xsl:value-of select="$mode"/>
+            <xsl:text>/m</xsl:text>
+            <xsl:value-of select="$id"/>
+        </xsl:variable>
+        
+        <xsl:result-document href="{$file}" method="text">
+            <xsl:value-of select="
+                xml-to-json($xml, map {
+                'indent': true(),
+                'escaped': false()
+                })"/>
+        </xsl:result-document>
+    </xsl:template>
+    
     <xsl:template match="@* | node()">
+        <xsl:param name="mode"/>
+        
         <xsl:copy>
-            <xsl:apply-templates select="@* | node()"/>
+            <xsl:apply-templates select="@* | node()">
+                <xsl:with-param name="mode" select="$mode"/>
+            </xsl:apply-templates>
         </xsl:copy>
     </xsl:template>
 
     <xsl:template
         match="json:string[@key = '@id'][following-sibling::json:string[@key = '@type'] = 'sc:Manifest']">
+        <xsl:param name="mode"/>
+        
         <xsl:variable name="id">
             <xsl:value-of select="substring-before(substring-after(., 'item:'), '/')"/>
         </xsl:variable>
@@ -97,14 +120,18 @@
         <json:map key="service">
             <json:string key="@context">http://iiif.io/api/search/1/context.json</json:string>
             <json:string key="@id">
-                <xsl:text>https://fleiden-u6old.ondigitalocean.app/cs1/search/m</xsl:text>
+                <xsl:text>https://fleiden-u6old.ondigitalocean.app/cs1</xsl:text>
+                <xsl:value-of select="$mode"/>
+                <xsl:text>/search/m</xsl:text>
                 <xsl:value-of select="$id"/>
             </json:string>
             <json:string key="@profile">http://iiif.io/api/search/1/search</json:string>
         </json:map>
 
         <json:string key="@id">
-            <xsl:text>https://raw.githubusercontent.com/heacu39/vanmanen-lepcha-manuscripts/refs/heads/main/iiif-manifests/cs1/m</xsl:text>
+            <xsl:text>https://raw.githubusercontent.com/heacu39/vanmanen-lepcha-manuscripts/refs/heads/main/iiif-manifests/cs1</xsl:text>
+            <xsl:value-of select="$mode"/>
+            <xsl:text>/m</xsl:text>
             <xsl:value-of select="$id"/>
         </json:string>
     </xsl:template>
