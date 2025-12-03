@@ -13,7 +13,8 @@
 
     <xsl:template match="manuscript">
         <xsl:variable name="id" select="@id"/>
-        <xsl:variable name="manifest" select="concat('m', substring-before(substring-after(json:map/json:string[@key = '@id'], 'iiif_manifest/item:'), '/'))"/>
+        <xsl:variable name="manifest"
+            select="concat('m', substring-before(substring-after(json:map/json:string[@key = '@id'], 'iiif_manifest/item:'), '/'))"/>
 
         <xsl:for-each select=".//json:array[@key = 'canvases']/json:map">
             <xsl:variable name="canvas" select="json:string[@key = '@id']"/>
@@ -25,7 +26,8 @@
                 <xsl:value-of select="substring-after(json:string[@key = 'label'], '-')"/>
                 <xsl:text>.xml</xsl:text>
             </xsl:variable>
-            <xsl:variable name="out">
+            
+            <xsl:variable name="wordout">
                 <xsl:text>annotations/word/</xsl:text>
                 <xsl:value-of select="$id"/>
                 <xsl:text>/0</xsl:text>
@@ -33,10 +35,24 @@
                 <xsl:text>.json</xsl:text>
             </xsl:variable>
             <xsl:apply-templates select="document($src)/*">
-                <xsl:with-param name="out" select="$out"/>
+                <xsl:with-param name="out" select="$wordout"/>
                 <xsl:with-param name="manifest" select="$manifest"/>
                 <xsl:with-param name="canvas" select="$canvas"/>
                 <xsl:with-param name="mode" select="'word'"/>
+            </xsl:apply-templates>
+            
+            <xsl:variable name="lineout">
+                <xsl:text>annotations/line/</xsl:text>
+                <xsl:value-of select="$id"/>
+                <xsl:text>/0</xsl:text>
+                <xsl:value-of select="substring-after(json:string[@key = 'label'], '-')"/>
+                <xsl:text>.json</xsl:text>
+            </xsl:variable>
+            <xsl:apply-templates select="document($src)/*">
+                <xsl:with-param name="out" select="$lineout"/>
+                <xsl:with-param name="manifest" select="$manifest"/>
+                <xsl:with-param name="canvas" select="$canvas"/>
+                <xsl:with-param name="mode" select="'line'"/>
             </xsl:apply-templates>
         </xsl:for-each>
     </xsl:template>
@@ -48,26 +64,26 @@
         <xsl:param name="mode"/>
 
         <xsl:if test="Page/TextRegion/TextLine">
-            <xsl:result-document href="{$out}" method="text" indent="true">
-                <xsl:variable name="map" as="element(json:map)">
-                    <json:map>
-                        <json:string key="manifest">
-                            <xsl:value-of select="$manifest"/>
-                        </json:string>
-                        <json:string key="canvas">
-                            <xsl:value-of select="$canvas"/>
-                        </json:string>
-                        <json:string key="page">
-                            <xsl:for-each select="//TextLine">
-                                <xsl:value-of select="./TextEquiv/Unicode"/>
-                                <xsl:text> [</xsl:text> 
-                                <xsl:value-of select="position()"/>
-                                <xsl:text>] </xsl:text>
-                            </xsl:for-each>
-                        </json:string>
-                        <json:array key="annotations">
-                            <xsl:choose>
-                                <xsl:when test="$mode = 'word'">
+            <xsl:choose>
+                <xsl:when test="$mode = 'word'">
+                    <xsl:result-document href="{$out}" method="text" indent="true">
+                        <xsl:variable name="map" as="element(json:map)">
+                            <json:map>
+                                <json:string key="manifest">
+                                    <xsl:value-of select="$manifest"/>
+                                </json:string>
+                                <json:string key="canvas">
+                                    <xsl:value-of select="$canvas"/>
+                                </json:string>
+                                <json:string key="page">
+                                    <xsl:for-each select="//TextLine">
+                                        <xsl:value-of select="./TextEquiv/Unicode"/>
+                                        <xsl:text> [</xsl:text>
+                                        <xsl:value-of select="position()"/>
+                                        <xsl:text>] </xsl:text>
+                                    </xsl:for-each>
+                                </json:string>
+                                <json:array key="annotations">
                                     <xsl:for-each select="//TextLine">
                                         <xsl:call-template name="ngrams">
                                             <xsl:with-param name="manifest" select="$manifest"/>
@@ -77,18 +93,92 @@
                                             <xsl:with-param name="length" select="count(Word)"/>
                                             <xsl:with-param name="offset" select="1"/>
                                         </xsl:call-template>
-                                    </xsl:for-each>                                
-                                </xsl:when>
-                                <xsl:when test="$mode = 'line'">
-                                    
-                                </xsl:when>
-                            </xsl:choose>
-                        </json:array>
-                    </json:map>
-                </xsl:variable>
-                <xsl:value-of select="xml-to-json($map)"/>
-            </xsl:result-document>
+                                    </xsl:for-each>
+                                </json:array>
+                            </json:map>
+                        </xsl:variable>
+                        <xsl:value-of select="xml-to-json($map)"/>
+                    </xsl:result-document>
+                </xsl:when>
+                <xsl:when test="$mode = 'line'">
+                    <xsl:result-document href="{$out}" method="text" indent="true">
+                        <xsl:variable name="map" as="element(json:map)">
+                            <json:map>
+                                <json:string key="manifest">
+                                    <xsl:value-of select="$manifest"/>
+                                </json:string>
+                                <json:string key="canvas">
+                                    <xsl:value-of select="$canvas"/>
+                                </json:string>
+                                <json:string key="page">
+                                    <xsl:for-each select="//TextLine">
+                                        <xsl:value-of select="./TextEquiv/Unicode"/>
+                                        <xsl:text> [</xsl:text>
+                                        <xsl:value-of select="position()"/>
+                                        <xsl:text>] </xsl:text>
+                                    </xsl:for-each>
+                                </json:string>
+                                <json:array key="annotations">
+                                    <xsl:for-each select="//TextLine">
+                                        <xsl:call-template name="textline">
+                                            <xsl:with-param name="manifest" select="$manifest"/>
+                                            <xsl:with-param name="canvas" select="$canvas"/>
+                                            <xsl:with-param name="line" select="position()"/>
+                                            <xsl:with-param name="text" select="TextEquiv/Unicode"/>
+                                            <xsl:with-param name="points" select="Coords/@points"/>
+                                        </xsl:call-template>
+                                    </xsl:for-each>
+                                </json:array>
+                            </json:map>
+                        </xsl:variable>
+                        <xsl:value-of select="xml-to-json($map)"/>
+                    </xsl:result-document>
+                </xsl:when>
+            </xsl:choose>
         </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="textline">
+        <xsl:param name="manifest"/>
+        <xsl:param name="canvas"/>
+        <xsl:param name="line"/>
+        <xsl:param name="text"/>
+        <xsl:param name="points"/>
+
+        <json:map>
+            <json:string key="manifest">
+                <xsl:value-of select="$manifest"/>
+            </json:string>
+            <json:string key="canvas">
+                <xsl:value-of select="$canvas"/>
+            </json:string>
+            <json:string key="mode">line</json:string>
+            <json:string key="line">
+                <xsl:value-of select="$line"/>
+            </json:string>
+            <json:map key="annotation">
+                <json:string key="id">
+                    <xsl:value-of select="$canvas"/>
+                    <xsl:text>/annotation/r</xsl:text>
+                    <xsl:value-of select="$line"/>
+                </json:string>
+                <json:string key="type">Annotation</json:string>
+                <json:string key="motivation">supplementing</json:string>
+                <json:map key="body">
+                    <json:string key="text">
+                        <xsl:value-of select="$text"/>
+                    </json:string>
+                    <json:string key="type">TextualBody</json:string>
+                </json:map>
+                <json:string key="target">
+                    <xsl:value-of select="$canvas"/>
+                    <xsl:text>#xywh=</xsl:text>
+                    <xsl:call-template name="xywh">
+                        <xsl:with-param name="points" select="$points"/>
+                    </xsl:call-template>
+                </json:string>
+            </json:map>
+        </json:map>
     </xsl:template>
 
     <xsl:template name="ngrams">
@@ -108,6 +198,7 @@
                     <json:string key="canvas">
                         <xsl:value-of select="$canvas"/>
                     </json:string>
+                    <json:string key="mode">word</json:string>
                     <json:string key="line">
                         <xsl:value-of select="$line"/>
                     </json:string>
