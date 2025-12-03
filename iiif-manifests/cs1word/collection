@@ -1,0 +1,52 @@
+
+ { "@context" : "http:\/\/iiif.io\/api\/presentation\/2\/context.json",
+  "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/collection",
+  "@type" : "sc:Collection",
+  "label" : "Van Manen Lepcha Collection",
+  "viewingHint" : "top",
+  "attribution" : "Leiden University Library",
+  "service" : 
+  { "@context" : "http:\/\/iiif.io\/api\/search\/1\/context.json",
+   "@id" : "https:\/\/fleiden-u6old.ondigitalocean.app\/cs1word\/collection",
+   "profile" : "http:\/\/iiif.io\/api\/search\/1\/search" },
+  "manifests" : 
+  [ 
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m333774",
+    "@type" : "sc:Manifest",
+    "label" : "Táng-ku nám-thár I.KERN 2740\/L1" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m338367",
+    "@type" : "sc:Manifest",
+    "label" : "Thok-drá mun-lóm I.KERN 2740\/L3" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m343296",
+    "@type" : "sc:Manifest",
+    "label" : "Kár-thák úk-dre sá sung \/ I.KERN 2740\/L13" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m1648027",
+    "@type" : "sc:Manifest",
+    "label" : "Ta-she sung I.KERN 2740\/L23" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m331464",
+    "@type" : "sc:Manifest",
+    "label" : "Rum pun-di sá nám-thár I.KERN 2740\/L36" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m335412",
+    "@type" : "sc:Manifest",
+    "label" : "Rum-mít náng-se sá nám-thár I.KERN 2740\/L47" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m335106",
+    "@type" : "sc:Manifest",
+    "label" : "Gú-rú cho-óng sá nám-thár I.KERN 2740\/L48" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m332207",
+    "@type" : "sc:Manifest",
+    "label" : "Táng-ku nám-thár I.KERN 2740\/L72" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m333703",
+    "@type" : "sc:Manifest",
+    "label" : "Trí-mík kun-den sá nám-thár I.KERN 2740\/L147" },
+   
+   { "@id" : "https:\/\/raw.githubusercontent.com\/heacu39\/vanmanen-lepcha-manuscripts\/refs\/heads\/main\/iiif-manifests\/cs1word\/m337873",
+    "@type" : "sc:Manifest",
+    "label" : "Trí-mík kun-den sá nám-thár I.KERN 2740\/L152" } ] }
