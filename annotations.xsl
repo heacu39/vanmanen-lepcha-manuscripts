@@ -26,7 +26,7 @@
                 <xsl:text>.xml</xsl:text>
             </xsl:variable>
             <xsl:variable name="out">
-                <xsl:text>annotations/</xsl:text>
+                <xsl:text>annotations/word/</xsl:text>
                 <xsl:value-of select="$id"/>
                 <xsl:text>/0</xsl:text>
                 <xsl:value-of select="substring-after(json:string[@key = 'label'], '-')"/>
@@ -36,6 +36,7 @@
                 <xsl:with-param name="out" select="$out"/>
                 <xsl:with-param name="manifest" select="$manifest"/>
                 <xsl:with-param name="canvas" select="$canvas"/>
+                <xsl:with-param name="mode" select="'word'"/>
             </xsl:apply-templates>
         </xsl:for-each>
     </xsl:template>
@@ -44,6 +45,7 @@
         <xsl:param name="out"/>
         <xsl:param name="manifest"/>
         <xsl:param name="canvas"/>
+        <xsl:param name="mode"/>
 
         <xsl:if test="Page/TextRegion/TextLine">
             <xsl:result-document href="{$out}" method="text" indent="true">
@@ -64,30 +66,29 @@
                             </xsl:for-each>
                         </json:string>
                         <json:array key="annotations">
-                            <xsl:apply-templates select="//TextLine">
-                                <xsl:with-param name="manifest" select="$manifest"/>
-                                <xsl:with-param name="canvas" select="$canvas"/>
-                            </xsl:apply-templates>
+                            <xsl:choose>
+                                <xsl:when test="$mode = 'word'">
+                                    <xsl:for-each select="//TextLine">
+                                        <xsl:call-template name="ngrams">
+                                            <xsl:with-param name="manifest" select="$manifest"/>
+                                            <xsl:with-param name="canvas" select="$canvas"/>
+                                            <xsl:with-param name="line" select="position()"/>
+                                            <xsl:with-param name="word" select="Word"/>
+                                            <xsl:with-param name="length" select="count(Word)"/>
+                                            <xsl:with-param name="offset" select="1"/>
+                                        </xsl:call-template>
+                                    </xsl:for-each>                                
+                                </xsl:when>
+                                <xsl:when test="$mode = 'line'">
+                                    
+                                </xsl:when>
+                            </xsl:choose>
                         </json:array>
                     </json:map>
                 </xsl:variable>
                 <xsl:value-of select="xml-to-json($map)"/>
             </xsl:result-document>
         </xsl:if>
-    </xsl:template>
-
-    <xsl:template match="TextLine">
-        <xsl:param name="manifest"/>
-        <xsl:param name="canvas"/>
-
-        <xsl:call-template name="ngrams">
-            <xsl:with-param name="manifest" select="$manifest"/>
-            <xsl:with-param name="canvas" select="$canvas"/>
-            <xsl:with-param name="line" select="position()"/>
-            <xsl:with-param name="word" select="Word"/>
-            <xsl:with-param name="length" select="count(Word)"/>
-            <xsl:with-param name="offset" select="1"/>
-        </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="ngrams">
