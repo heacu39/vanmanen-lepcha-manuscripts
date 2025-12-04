@@ -215,6 +215,12 @@
                             <xsl:value-of select="json:normalize-space($edge)"/>
                         </json:string>
                     </xsl:if>
+                    <json:string key="before">
+                        <xsl:value-of select="string-join($word[position() &lt; $offset]/TextEquiv/Unicode, ' ')"/>
+                    </json:string>
+                    <json:string key="after">
+                        <xsl:value-of select="string-join($word[position() &gt;= $offset + $length]/TextEquiv/Unicode, ' ')"/>
+                    </json:string>
                     <json:map key="annotation">
                         <json:string key="id">
                             <xsl:value-of select="$canvas"/>
